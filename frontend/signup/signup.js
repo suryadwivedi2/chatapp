@@ -1,3 +1,10 @@
+
+function redirect(event){
+  event.preventDefault();
+  window.location.href='../login/login.html';
+}
+
+
 async function getformvalue(event){
     event.preventDefault();
    try{
