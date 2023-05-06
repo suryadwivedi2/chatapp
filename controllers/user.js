@@ -1,5 +1,6 @@
 const User=require('../models/user-details');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 
 
 exports.adduser=async(req,res,next)=>{
@@ -29,6 +30,11 @@ exports.adduser=async(req,res,next)=>{
     }
 }
 
+const generatetoken=(id,phonenumber)=>{
+    return jwt.sign({userId:id,userphone:phonenumber},'8738654326758615762675');
+}
+
+
 
 exports.loginuser=async(req,res,next)=>{
 try{
@@ -41,17 +47,17 @@ try{
                 return res.status(400).json({user:user});
             }
             if (result === true) {
-                return res.status(201).json({message:"succesfull"});
+                return res.status(201).json({token:generatetoken(user.id,user.phonenumber)});
             } 
             if(result===false)
             {
-                return res.status(400).json({message:'failed'});
+                return res.status(401).json({message:'failed'});
             }
         })
     }else{
        throw new Error('email is invalid');
     }
 }catch{
-    return res.status(501).json({"message":"email not found"});
+    return res.status(404).json({"message":"user not found"});
 }
 }
