@@ -16,7 +16,8 @@ try{
    const res=await axios.post('http://localhost:3000/chatapp/login-user',userdata);
    if(res.status==201){
     localStorage.setItem('token',res.data.token);
-    alert("login succesfull")
+    alert("login succesfull");
+    window.location.href='../chatappmain/main.html';
    }else{
     throw new Error('something went error');
    }
