@@ -16,15 +16,16 @@ function parseJwt(token) {
 async function getmsg(event){
     event.preventDefault();
    try{ 
-    const insert =document.getElementById('insert');
+    const insert=document.getElementById('insert');
     const msg=document.getElementById('msg').value;
-    let data={
+    let   data={
         message:msg
     }
 const res=await axios.post('http://localhost:3000/user/main-page',data, { headers: { 'Authorization': token } })
 if(res.status==200){
-    console.log(decodedtoken);
-    insert.innerHTML+=`<div>${decodedtoken.username}:${msg}<div>`;
+    //console.log(decodedtoken);
+    //insert.innerHTML+=`<div>${decodedtoken.username}:${msg}<div>`;
+    document.getElementById('msg').value=" ";
 }else{
 throw new Error('something went wrong');
 }  
@@ -37,15 +38,19 @@ throw new Error('something went wrong');
 
 window.addEventListener('DOMContentLoaded',async()=>{
     try{
-        const res=await axios.get('http://localhost:3000/user/get-message',{ headers: { 'Authorization': token } })
-         if(res.status==200){
-          // console.log(res);
-        for(let i=0;i<res.data.length;i++){
-            showmsges(res.data[i]);
-        } 
-        }else{
-            throw new Error('something went wrong')
-         }
+        const insert=document.getElementById('insert');
+        setInterval(async()=>{
+          const    res=await axios.get('http://localhost:3000/user/get-message',{ headers: { 'Authorization': token } })
+             if(res.status==200){
+                insert.innerHTML=' ';
+              // console.log(res);
+            for(let i=0;i<res.data.length;i++){
+                showmsges(res.data[i]);
+            } 
+            }else{
+                throw new Error('something went wrong')
+             }
+            },1000)
     }catch(err){
      console.log(err);
     }
@@ -54,5 +59,8 @@ window.addEventListener('DOMContentLoaded',async()=>{
 
 
 function showmsges(data){
-    insert.innerHTML+=`<div>${data.username}:${data.message}<div>`;    
+    const insert=document.getElementById('insert');
+    const e=document.createElement('div');
+    e.innerHTML+=`<div>${data.username} : ${data.message}<div>`;    
+     insert.appendChild(e);
 }
