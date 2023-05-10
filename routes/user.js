@@ -6,7 +6,8 @@ const router=express.Router();
 
 
 router.post('/add-user',usercontroller.adduser);
-router.post('/login-user',usercontroller.loginuser)
+router.post('/login-user',usercontroller.loginuser);
+
 
 
 

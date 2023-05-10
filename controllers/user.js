@@ -1,6 +1,7 @@
 const User=require('../models/user-details');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+require('dotenv').config();
 
 
 exports.adduser=async(req,res,next)=>{
@@ -30,8 +31,8 @@ exports.adduser=async(req,res,next)=>{
     }
 }
 
-const generatetoken=(id,phonenumber)=>{
-    return jwt.sign({userId:id,userphone:phonenumber},'8738654326758615762675');
+const generatetoken=(id,phonenumber,name)=>{
+    return jwt.sign({userId:id,userphone:phonenumber,username:name},process.env.JWT_STRING);
 }
 
 
@@ -47,7 +48,7 @@ try{
                 return res.status(400).json({user:user});
             }
             if (result === true) {
-                return res.status(201).json({token:generatetoken(user.id,user.phonenumber)});
+                return res.status(201).json({token:generatetoken(user.id,user.phonenumber,user.name)});
             } 
             if(result===false)
             {
