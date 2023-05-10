@@ -32,3 +32,27 @@ throw new Error('something went wrong');
     console.log(err);
 } 
 }
+
+
+
+window.addEventListener('DOMContentLoaded',async()=>{
+    try{
+        const res=await axios.get('http://localhost:3000/user/get-message',{ headers: { 'Authorization': token } })
+         if(res.status==200){
+          // console.log(res);
+        for(let i=0;i<res.data.length;i++){
+            showmsges(res.data[i]);
+        } 
+        }else{
+            throw new Error('something went wrong')
+         }
+    }catch(err){
+     console.log(err);
+    }
+})
+
+
+
+function showmsges(data){
+    insert.innerHTML+=`<div>${data.username}:${data.message}<div>`;    
+}

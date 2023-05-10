@@ -10,10 +10,22 @@ exports.message=async (req,res,next)=>{
        const message=req.body.message;
        await Msg.create({
            message:message,
-           userId:req.user.id
+           userId:req.user.id,
+           username:req.user.name
        })
-       res.status(200).json({"mesage":'successful'})
+       res.status(200).json({"message":'successful'})
    }catch(err){
       res.status(401).json(err);
    }
+}
+
+
+exports.getmsg=async(req,res,next)=>{
+try{
+const allmsg=await Msg.findAll();
+//console.log(allmsg);
+res.status(200).json(allmsg);
+}catch(err){
+res.status(400).json(err);
+}
 }
