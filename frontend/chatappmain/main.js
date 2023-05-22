@@ -81,3 +81,10 @@ function showmsges(data) {
     e.innerHTML += `<div>${data.username} : ${data.message}<div>`;
     insert.appendChild(e);
 }
+
+
+
+ function getgroup(event){
+ event.preventDefault();
+window.location.href='../group/group.html';
+ }
