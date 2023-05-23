@@ -6,7 +6,7 @@ const router=express.Router();
 
 
 router.post('/main-page',Authorization.authenticate,chatappcontroller.message)
-router.get('/get-message',chatappcontroller.getmsg);
+router.get('/get-message',Authorization.authenticate,chatappcontroller.getmsg);
 
 
 module.exports=router;

@@ -19,8 +19,11 @@
     <div>
         <form action="#" onsubmit="getgroup(event)">
             <label for="groupname">ENTER GROUP NAME:</label>
-            <input type="text" placeholder="enter name of your group" required>
+            <input type="text" id="groupname" placeholder="enter name of your group" required>
             <br>
+            <div id="list">
+
+            </div>
             <button type="submit">create group</button>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
             <script src="group.js"></script>

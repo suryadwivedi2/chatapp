@@ -2,19 +2,54 @@ const { Op } = require("sequelize");
 const User = require('../models/user-details');
 const Msg = require('../models/message');
 const Grp=require('../models/group');
+const Ugrp=require('../models/user_group');
 const UserGrp=require('../models/user_group');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 
-exports.message = async (req, res, next) => {
+
+
+exports.getuser = async (req, res, next) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    }catch(err){
+        res.satus(500).json(err);
+    }
+}
+
+
+exports.adduser=async(req,res,next)=>{
+try
+{
+    const name=req.body.name;
+    await Grp.create({
+      groupname:name
+}) 
+
+const grp=await Grp.findAll({where:{
+    groupname:name
+}})
+const ug=await UserGrp.create({
+    userId:req.user.id,
+    groupGroupid:grp[0].groupid
+
+})
+res.status(200).json({"message":"created"});
+}catch(err){
+    res.status(500).json(err);
+}
+}
+
+
+
+exports.addmessage=async(req,res,next)=>{
     try {
         const message = req.body.message;
         await Msg.create({
             message: message,
             userId: req.user.id,
-            username: req.user.name
+            username: req.user.name,
+            groupGroupid:req.query.groupid
         })
         res.status(200).json({ "message": 'successful' })
     } catch (err) {
@@ -22,8 +57,7 @@ exports.message = async (req, res, next) => {
     }
 }
 
-
-exports.getmsg = async (req, res, next) => {
+exports.getmessage = async (req, res, next) => {
     try {
         const id = req.query.lastid;
         if (id == undefined) {
@@ -31,10 +65,10 @@ exports.getmsg = async (req, res, next) => {
         }
         const newmsg = await Msg.findAll({
             where: {
-                id: {
-                    [Op.gt]: id
-                },
-                groupGroupid:null
+                groupGroupid:req.query.groupid,
+                 id: {
+                     [Op.gt]: id
+                 }
             }
 
         });
@@ -51,9 +85,9 @@ exports.getmsg = async (req, res, next) => {
             groupid:
                 groupids
         }})
-        for(let i=0;i<group_id.length;i++){
-            console.log(group_id[i].groupname)
-        }
+        // for(let i=0;i<group_id.length;i++){
+        //     console.log(group_id[i].groupname)
+        // }
         //console.log(group_id[2].groupname);
         res.status(200).json({newmsg,group_id});
     } catch (err) {
