@@ -106,3 +106,8 @@ grouplist.appendChild(li);
  event.preventDefault();
 window.location.href='../group/group.html';
  }
+
+ function logout(event){
+    event.preventDefault();
+    window.location.href='../login/login.html';
+ }

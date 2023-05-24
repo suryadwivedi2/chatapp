@@ -60,15 +60,12 @@ exports.addmessage=async(req,res,next)=>{
 exports.getmessage = async (req, res, next) => {
     try {
         const id = req.query.lastid;
-        if (id == undefined) {
-            id = -1;
-        }
+        // if (id == undefined) {
+        //     id = -1;
+        // }
         const newmsg = await Msg.findAll({
             where: {
-                groupGroupid:req.query.groupid,
-                 id: {
-                     [Op.gt]: id
-                 }
+                groupGroupid:req.query.groupid
             }
 
         });

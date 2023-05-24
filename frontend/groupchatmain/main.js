@@ -1,6 +1,6 @@
 
 const token = localStorage.getItem('token');
-const groupid=JSON.parse(localStorage.getItem('groupid'));
+const groupid = JSON.parse(localStorage.getItem('groupid'));
 
 const decodedtoken = parseJwt(token);
 
@@ -39,46 +39,46 @@ async function getmsg(event) {
 
 
 window.addEventListener('DOMContentLoaded', async () => {
-    try { 
+    try {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const groupid=urlParams.get('groupid')
-        localStorage.setItem('groupid',groupid);
-          //console.log(queryString)
-      document.getElementById('h3').textContent='welcome to '+urlParams.get('groupname');
-         //console.log(urlParams.get('groupname'));
+        const groupid = urlParams.get('groupid')
+        localStorage.setItem('groupid', groupid);
+        //console.log(queryString)
+        document.getElementById('h3').textContent = 'welcome to ' + urlParams.get('groupname');
+        //console.log(urlParams.get('groupname'));
 
         const insert = document.getElementById('insert');
-         const grouplistmain=document.getElementById('grouplist');
+        const grouplistmain = document.getElementById('grouplist');
         setInterval(async () => {
-            const old_messages=JSON.parse(localStorage.getItem('groupmessage'));
+            // const old_messages=JSON.parse(localStorage.getItem('groupmessage'));
             let lastid;
-            if(old_messages!==null){
-                lastid=old_messages[old_messages.length-1].id;
-            }
+            // if(old_messages!==null){
+            //     lastid=old_messages[old_messages.length-1].id;
+            // }
             const res = await axios.get(`http://localhost:3000/group/getmessage?lastid=${lastid}&groupid=${groupid}`, { headers: { 'Authorization': token } })
             if (res.status == 200) {
                 insert.innerHTML = ' ';
-              grouplistmain.innerHTML=" ";
-             for(let j=0;j<res.data.group_id.length;j++){
-                showgroups(res.data.group_id[j]);
-             }
-                if(lastid==undefined){
-                    localStorage.setItem('groupmessage',JSON.stringify(res.data.newmsg))
-                   for(let i=0;i<res.data.newmsg.length;i++){
-                          showmsges(res.data.newmsg[i]);
-                  }
-                }else{
-                    const old_messages=JSON.parse(localStorage.getItem('groupmessage'));
-                    const new_message=res.data.newmsg;
-                    const messages=old_messages.concat(new_message);
-                    if (messages.length>10){
-                    messages.splice(0,10)
+                grouplistmain.innerHTML = " ";
+                for (let j = 0; j < res.data.group_id.length; j++) {
+                    showgroups(res.data.group_id[j]);
+                }
+                if (lastid == undefined) {
+                    //localStorage.setItem('groupmessage',JSON.stringify(res.data.newmsg))
+                    for (let i = 0; i < res.data.newmsg.length; i++) {
+                        showmsges(res.data.newmsg[i]);
                     }
-                    localStorage.setItem('groupmessage',JSON.stringify(messages));
-                     for(let i=0;i<messages.length;i++){
-                         showmsges(messages[i]);
-                      }
+                } else {
+                    //const old_messages=JSON.parse(localStorage.getItem('groupmessage'));
+                    const messages = res.data.newmsg;
+                    //const messages=old_messages.concat(new_message);
+                    if (messages.length > 10) {
+                        messages.splice(0, 10)
+                    }
+                    //localStorage.setItem('groupmessage',JSON.stringify(messages));
+                    for (let i = 0; i < messages.length; i++) {
+                        showmsges(messages[i]);
+                    }
                 }
             } else {
                 throw new Error('something went wrong');
@@ -97,21 +97,32 @@ function showmsges(data) {
 }
 
 
-function showgroups(data){
-const grouplist=document.getElementById('grouplist');
-const li=document.createElement('li');
-const a=document.createElement('a');
-a.value=data.groupid;
-a.text=data.groupname;
-a.id="button";
-a.href='../groupchatmain/main.html';
-li.appendChild(a);
-grouplist.appendChild(li);
+function showgroups(data) {
+    const grouplist = document.getElementById('grouplist');
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.value = data.groupid;
+    a.text = data.groupname;
+    a.id = "button";
+    a.href = '../groupchatmain/main.html';
+    li.appendChild(a);
+    grouplist.appendChild(li);
 }
 
 
 
- function getgroup(event){
- event.preventDefault();
-window.location.href='../group/group.html';
- }
+function getgroup(event) {
+    event.preventDefault();
+    window.location.href = '../group/group.html';
+}
+
+
+function logout(event) {
+    event.preventDefault();
+    window.location.href = '../login/login.html';
+}
+
+function mainscreen(event){
+    event.preventDefault();
+    window.location.href='../chatappmain/main.html';
+}

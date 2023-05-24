@@ -17,6 +17,9 @@
 	  bottom: 10px;
 	  width: 100%;
     }
+    .log{
+      text-align: right;
+    }
 </style>
     </head>
 
@@ -26,6 +29,9 @@
      <h1>CHAT APP</h1>
      <button onclick="getgroup(event)">MAKE NEW GROUP</button>
         </header>
+        <div class="log" >
+            <button id="logout" onclick="logout(event)">logout</button>
+        </div>
         <main>
             <div class="container d-inline">
             <div  id="grouplistmain">
