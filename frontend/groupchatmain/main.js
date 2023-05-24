@@ -60,6 +60,10 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (res.status == 200) {
                 insert.innerHTML = ' ';
                 grouplistmain.innerHTML = " ";
+                if (decodedtoken.userId !== res.data.group_id[0].isAdmin && document.getElementById('searchform')!==null ) {
+                    document.getElementById('searchform').remove();
+                    document.getElementById('abtn').remove();
+                }
                 for (let j = 0; j < res.data.group_id.length; j++) {
                     showgroups(res.data.group_id[j]);
                 }
@@ -122,7 +126,50 @@ function logout(event) {
     window.location.href = '../login/login.html';
 }
 
-function mainscreen(event){
+
+
+function mainscreen(event) {
     event.preventDefault();
-    window.location.href='../chatappmain/main.html';
+    window.location.href = '../chatappmain/main.html';
+}
+
+
+
+async function searchuser(event) {
+    event.preventDefault();
+    try {
+        const username = document.getElementById('suser').value;
+        const res = await axios.get(`http://localhost:3000/group/searchuser?username=${username}`, { headers: { 'Authorization': token } });
+        if (res.status == 200) {
+            const div = document.getElementById('searchform');
+            div.innerHTML = `<h4>${res.data[0].name}</h4>`;
+            localStorage.setItem('username',res.data[0].name);
+        } else {
+            throw new Error('user not in contact list/chatapp');
+        }
+    } catch (err) {
+        document.getElementById('admin').innerHTML = `<h6>user not in contact list/chatapp</h6>`
+    }
+}
+
+
+
+
+
+async function getbuttonvalue(event) {
+    event.preventDefault();
+    try {
+        const groupid = localStorage.getItem('groupid');
+        const username = localStorage.getItem('username');
+        const res=await axios.post(`http://localhost:3000/group/addmember?groupid=${groupid}&name=${username}`);
+        if(res.status=200){
+            console.log("succesfullyadded")
+        }else{
+            throw new Error('something wrong');
+        }
+    }catch(err){
+console.log(err);
+    }
+
+
 }

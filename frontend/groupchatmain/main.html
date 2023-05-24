@@ -33,6 +33,16 @@
         <header>
             <h1>CHAT APP</h1>
             <h3 id="h3"> </h3>
+            <div id="admin">
+                <div id="searchform">
+                    <form action="#" onsubmit="searchuser(event)" >
+                        <label for="suser">SEARCH USER</label>
+                        <input type="text" id="suser" placeholder="enter name of the user" required>
+                        <button type="submit" id="sbtn">search user</button>               
+                    </form>
+                </div>
+                <button id="abtn" onclick="getbuttonvalue(event)">ADD TO GROUP</button>
+            </div>
         </header>
         <div class="log">
             <button id="logout" onclick="logout(event)">logout</button>

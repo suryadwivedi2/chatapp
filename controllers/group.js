@@ -23,7 +23,8 @@ try
 {
     const name=req.body.name;
     await Grp.create({
-      groupname:name
+      groupname:name,
+      isAdmin:req.user.id
 }) 
 
 const grp=await Grp.findAll({where:{
@@ -32,7 +33,6 @@ const grp=await Grp.findAll({where:{
 const ug=await UserGrp.create({
     userId:req.user.id,
     groupGroupid:grp[0].groupid
-
 })
 res.status(200).json({"message":"created"});
 }catch(err){
@@ -88,6 +88,44 @@ exports.getmessage = async (req, res, next) => {
         //console.log(group_id[2].groupname);
         res.status(200).json({newmsg,group_id});
     } catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+
+
+
+exports.searchuser=async(req,res,next)=>{
+ try{
+     const name=req.query.username;
+     //console.log(name);
+     const users=await User.findAll({where:{
+         name:{
+            [Op.like]:`%${name}%`
+         }
+     }})
+     res.status(200).json(users);
+ }catch(err){
+    res.status(400).json(err);
+ }
+}
+
+
+exports.addmember=async(req,res,next)=>{
+    try{
+        const name=req.query.name;
+    const groupid=req.query.groupid;
+    const user=await User.findOne({where:{
+        name:{
+            [Op.like]:`%${name}%`
+        }
+    }});
+     const add=await Ugrp.create({
+         userId:user.id,
+         groupGroupid:groupid
+     }) 
+    res.status(200).json({"messsage":"successfull"});
+    }catch(err){
         res.status(400).json(err);
     }
 }
