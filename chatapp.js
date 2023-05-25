@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path=require('path');
 
 const sequelize = require('./util/database');
 
@@ -25,6 +26,10 @@ app.use(cors());
 app.use('/chatapp', userroute);
 app.use('/user', chatroute);
 app.use('/group',grouproute);
+app.use((req,res,next)=>{
+    //console.log(req.url);
+res.sendFile(path.join(__dirname,`frontend/${req.url}`))
+})
 
 
 
