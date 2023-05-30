@@ -1,7 +1,9 @@
+
 function redirect(event){
     event.preventDefault();
     window.location.href='../signup/signup.html';
 }
+
 
 
 async function getformvalue(event){
@@ -25,3 +27,4 @@ try{
     console.log(err);
 }
 }
+

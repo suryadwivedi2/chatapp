@@ -1,4 +1,11 @@
 
+const socket = io('http://localhost:3000')
+
+socket.on('connect', () => {
+    console.log("you are connected :", socket.id);
+})
+
+
 const token = localStorage.getItem('token');
 const groupid = JSON.parse(localStorage.getItem('groupid'));
 
@@ -25,6 +32,7 @@ async function getmsg(event) {
         }
         const res = await axios.post(`http://localhost:3000/group/addmessage?groupid=${groupid}`, data, { headers: { 'Authorization': token } })
         if (res.status == 200) {
+            socket.emit('send-message', msg)
             //console.log(decodedtoken);
             insert.innerHTML += `<div>${decodedtoken.username}:${msg}<div>`;
             document.getElementById('msg').value = " ";
@@ -49,12 +57,17 @@ window.addEventListener('DOMContentLoaded', async () => {
         //console.log(urlParams.get('groupname'));
         const insert = document.getElementById('insert');
         const grouplistmain = document.getElementById('grouplist');
-        setInterval(async () => {
+        //setInterval(async () => {
+            printmsg();
+            socket.on('receive-message', (message) => {
+                printmsg();
+            })
+        async function printmsg(){   
             // const old_messages=JSON.parse(localStorage.getItem('groupmessage'));
             let lastid;
             // if(old_messages!==null){
-            //     lastid=old_messages[old_messages.length-1].id;
-            // }
+                //     lastid=old_messages[old_messages.length-1].id;
+                // }
             const res = await axios.get(`http://localhost:3000/group/getmessage?lastid=${lastid}&groupid=${groupid}`, { headers: { 'Authorization': token } })
             if (res.status == 200) {
                 insert.innerHTML = ' ';
@@ -87,7 +100,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             } else {
                 throw new Error('something went wrong');
             }
-        }, 2000)
+        }
+        //}, 2000)
     } catch (err) {
         console.log(err);
     }
