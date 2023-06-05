@@ -77,9 +77,9 @@ window.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('abtn').remove();
                     document.getElementById('showmember').remove();
                 }
-                for (let j = 0; j < res.data.group_id.length; j++) {
-                    showgroups(res.data.group_id[j]);
-                }
+                // for (let j = 0; j < res.data.group_id.length; j++) {
+                //     showgroups(res.data.group_id[j]);
+                // }
                 if (lastid == undefined) {
                     //localStorage.setItem('groupmessage',JSON.stringify(res.data.newmsg))
                     for (let i = 0; i < res.data.newmsg.length; i++) {
@@ -230,3 +230,22 @@ function showmem(data) {
         }
     }
 }
+async function uploadmedia(event) {
+    event.preventDefault();
+    try {
+        const media=document.getElementById('multimedia').value;
+        const data={
+          "file":media
+        }
+        console.log(data);
+        const res = await axios.post("http://localhost:3000/user/upload-media",data,{ headers: { 'Content-Type': "multipart/form-data" } })
+        if (res.status == 200) {
+       console.log(res.data);
+        } else {
+            throw new Error("something went wrong");
+        }
+    }catch(err){
+        console.log(err);
+    }
+}
+

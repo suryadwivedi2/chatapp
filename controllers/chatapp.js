@@ -1,4 +1,7 @@
 const { Op } = require("sequelize");
+const AWS=require('aws-sdk');
+const fs=require('fs');
+const path=require('path');
 const User = require('../models/user-details');
 const Msg = require('../models/message');
 const Grp=require('../models/group');
@@ -59,4 +62,46 @@ exports.getmsg = async (req, res, next) => {
     } catch (err) {
         res.status(400).json(err);
     }
+}
+
+
+exports.uploadmedia=async(req,res,next)=>{
+    try{
+   const media=await req.body.file;
+   const fileName="image.jpg";
+   const fileUrl=await uploadtoS3(media,fileName); 
+   res.status(200).json({fileUrl,"sucesss":"true"})
+    }catch(err){
+        res.status(400).json(err);
+    }
+}
+
+async function uploadtoS3(data,fileName){
+const BUCKETNAME=process.env.BUCKET_NAME;
+const I_AM_KEY=process.env.I_AM_USER_KEY;
+const I_AM_SECRET_KEY=process.env.I_AM_USER_SECRETKEY;
+
+
+let s3bucket=new AWS.S3({
+    accessKeyId:I_AM_KEY,
+    secretAccessKey:I_AM_SECRET_KEY,
+   // Bucket:BUCKETNAME
+})
+
+s3bucket.createBucket(()=>{
+    var params={
+        Bucket:BUCKETNAME,
+        Key:fileName,
+        Body:data
+    }
+    s3bucket.upload(params,(err,data)=>{
+        if(err){
+            console.log("something went wrong",err);
+        }else{
+            console.log("success",data);
+            return data;
+        }
+    })
+})   
+
 }

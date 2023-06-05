@@ -29,7 +29,6 @@ function parseJwt(token) {
 async function getmsg(event) {
     event.preventDefault();
     try {
-        
         const insert = document.getElementById('insert');
         const msg = document.getElementById('msg').value;
         let data = {
@@ -49,7 +48,24 @@ async function getmsg(event) {
     }
 }
 
-
+async function uploadmedia(event) {
+    event.preventDefault();
+    try {
+        const media=document.getElementById('multimedia').value;
+        const data={
+          "file":media
+        }
+        console.log(data);
+        const res = await axios.post("http://localhost:3000/user/upload-media",data,{ headers: { 'Content-Type': "multipart/form-data" } })
+        if (res.status == 200) {
+       console.log(res.data.fileUrl.Location);
+        } else {
+            throw new Error("something went wrong");
+        }
+    }catch(err){
+        console.log(err);
+    }
+}
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
